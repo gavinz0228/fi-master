@@ -4,7 +4,7 @@ from datetime import date, datetime
 sys.path.append(path.join(path.dirname(__file__), '..'))
 
 from fimaster.utils import get, is_bday
-from fimaster.data_api import *
+from fimaster.data_api import get_yield_curve, get_yield_curve_by_dates
 
 def test_get():
     print("get xml from us treasury gov")

@@ -34,7 +34,7 @@ def get_yield_curve_bus_adj(date):
 
         curr_date = curr_date - timedelta(days=1)
         data = parse_xml(get(construct_url(curr_date.year, curr_date.month, curr_date.day)))
-        print(curr_date, data)
+        #print(curr_date, data)
         if is_bday(curr_date):
             day_adjusted += 1
     return data
