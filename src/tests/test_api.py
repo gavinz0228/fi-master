@@ -23,6 +23,7 @@ def test_get_one_day():
 def test_get_month():
     print('get a month')
     data = get_yield_curve(2020, 11)
+    print(data.to_markdown())
     assert len(data) > 0
 
 def test_get_year():
@@ -38,3 +39,4 @@ def test_get_multiple_dates():
 
 if __name__ == '__main__':
     test_get()
+    test_get_month()
