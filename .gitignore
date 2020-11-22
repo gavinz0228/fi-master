@@ -1,0 +1,6 @@
+src/fimaster/__pycache__
+src/fimaster/utils/__pycache__
+src/fimaster/data_api/__pycache__
+src/fimaster/cache
+src/.pytest_cache
+src/tests/__pycache__
