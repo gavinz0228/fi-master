@@ -4,3 +4,5 @@ src/fimaster/data_api/__pycache__
 src/fimaster/cache
 src/.pytest_cache
 src/tests/__pycache__
+dist/
+fimaster.egg-info

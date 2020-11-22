@@ -1,7 +1,18 @@
 # fi-master
 A python library for fixed-income data and valuation.
 
+# PYPI [https://pypi.org/project/fimaster/](https://pypi.org/project/fimaster/)
+
 ## Usage:
+
+To Install:
+
+```bash
+pip install fimaster
+```
+
+To Import:
+
 ```python
 from fimaster.data_api import get_yield_curve, get_yield_curve_by_dates
 ```
@@ -20,12 +31,12 @@ data = get_yield_curve(2020)
 
 get daily yield curve for dates specified:
 ```python
-get_yield_curve_by_dates
+get_yield_curve_by_dates([ <date1>, <date2>])
 ```
 
 output example:
 
-
+```python
 |    |   id | date                |   1month |   2monthh |   3month |   6month |   1year |   2year |   3year |   5year |   7year |   10year |   20year |   30year |
 |---:|-----:|:--------------------|---------:|----------:|---------:|---------:|--------:|--------:|--------:|--------:|--------:|---------:|---------:|---------:|
 |  0 | 7718 | 2020-11-02T00:00:00 |     0.09 |      0.09 |     0.09 |     0.11 |    0.13 |    0.16 |    0.2  |    0.38 |    0.63 |     0.87 |     1.41 |     1.63 |
@@ -42,3 +53,4 @@ output example:
 | 11 | 7729 | 2020-11-18T00:00:00 |     0.07 |      0.09 |     0.09 |     0.1  |    0.11 |    0.16 |    0.22 |    0.4  |    0.64 |     0.88 |     1.42 |     1.62 |
 | 12 | 7730 | 2020-11-19T00:00:00 |     0.08 |      0.08 |     0.07 |     0.1  |    0.11 |    0.18 |    0.22 |    0.39 |    0.63 |     0.86 |     1.38 |     1.58 |
 | 13 | 7731 | 2020-11-20T00:00:00 |     0.09 |      0.09 |     0.07 |     0.1  |    0.11 |    0.16 |    0.21 |    0.38 |    0.62 |     0.83 |     1.33 |     1.53 |
+```
