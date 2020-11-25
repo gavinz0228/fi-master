@@ -6,7 +6,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="fimaster",
-    version="0.0.0.3",
+    version="0.0.0.4",
     author="Gavin Zhang",
     author_email="gavinz0228@gmail.com",
     description="A python library for fixed-income data and valuation.",
