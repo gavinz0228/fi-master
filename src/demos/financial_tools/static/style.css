@@ -1,10 +1,10 @@
-@media only screen and (max-width: 992px) {
+@media only screen and (max-width: 999px) {
     #main{
         width: 100% !important;
         padding-top: 30px;
     }
 }
-@media only screen and (min-width: 993px) {
+@media only screen and (min-width: 1000px) {
     #main{
         width: 1000px !important;
         margin: 0 auto;
@@ -12,9 +12,12 @@
         text-align: left;
         padding-top: 30px;
     }
-    #yield-calc-form{
-        padding-top: 30px;
+    #main-box{
+        margin-top: 50px;
     }
+}
+#main-box{
+    margin-top: 50px;
 }
 #cashflows-table{
     display: none;

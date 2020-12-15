@@ -1,7 +1,8 @@
 {% extends "base.html" %}
 
 {% block yieldCalculator %}
-<form>
+<h2 class="text-center">Savings Calculator</h2>
+<form id="main-box">
   <div class="form-row form-group">
     <div class="col input-group">
       <div class="input-group-prepend">
@@ -71,7 +72,7 @@
         function init(){
             $('[data-bind="startAmount"]').val('200000').trigger("change");
             $('[data-bind="monthlyContribution"]').val('5000').trigger("change");
-            $('[data-bind="yieldOfSavings"]').val(0.03).trigger("change");
+            $('[data-bind="yieldOfSavings"]').val(0.07).trigger("change");
             $('[data-bind="numOfYears"]').val(20).trigger("change");
         }
     </script>
