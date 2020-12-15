@@ -17,7 +17,7 @@ def simple_yield_calc(face, price, issue_date, last_pmt_date, pay_freq, coupon, 
     fixedRateBond = ql.FixedRateBond(settlementDays, face, schedule, [coupon],  ql.Thirty360())
     yld = fixedRateBond.bondYield(price, ql.Thirty360(),compounded, com_freq, issueDate)
     cfs = add_npv_to_cashflows(fixedRateBond.cashflows(), pay_freq, yld)
-    return yld, cfs
+    return {"yield":yld, "cashFlows": [ (str(cf[0]),) + cf[1:] for cf in cfs] }
 
 def add_npv_to_cashflows(cfs, freq, yld):
     pre_date = None
@@ -36,17 +36,3 @@ if __name__ == '__main__':
     for cf in cashflows:
         print(cf)
     print(yld)
-        #print(cashflows)
-    '''
-    compounded = [0]
-    freq = list(range(1, 367))
-    for c in compounded:
-        for f in freq:
-            yld, cashflows = simple_yield_calc(1000, 100,datetime(2019,1,1), datetime(2021,1,1), 12, 0.03, c, f )
-
-            #for cf in cashflows:
-            #    print(cf[2])
-            if abs(yld - 0.03) < 0.000001:
-                print(c,f,yld)
-                #print(cashflows)
-'''

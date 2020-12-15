@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block yieldCalculator %}
+<form id="yield-calc-form">
+  <div class="form-row form-group">
+    <div class="col input-group">
+      <div class="input-group-prepend">
+          <span class="input-group-text">Current Amount</span>
+        </div>
+      <input type="number" class="form-control" placeholder="Current Amount" data-bind="currAmount">
+    </div>
+    <div class="col input-group">
+      <div class="input-group-prepend">
+          <span class="input-group-text">Inflation Rate</span>
+      </div>
+      <input type="number" class="form-control" placeholder="Inflation Rate Assumed" data-bind="rate">
+    </div>
+    <div class="col input-group">
+      <div class="input-group-prepend">
+          <span class="input-group-text">Targeted Year</span>
+        </div>
+      <input type="number" class="form-control" placeholder="Targeted Year" data-bind="targetedYear">
+    </div>
+  </div>
+  <button class="form-control form-group btn btn-sm btn-primary" type="button" onclick="calculate()">Calculate Inflation</button>
+  
+</form>
+<p id="infla-result"></p>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+
+<script>
+
+
+
+    function calculate(){
+            axios.post('/calculateInflation/', viewData)
+                .then(res=>{
+                    console.log(res.data);
+                    $('#infla-result').html("The amount of <b>" + res.data.currAmount + "</b> today is worth <b>" + res.data.calculatedAmount + "</b> in year <b>" + res.data.targetedYear +"</b>");
+ 
+                })
+                .catch(err=>{
+                    console.log(err);
+                });
+        }
+        function init(){
+            $('[data-bind="currAmount"]').val('100000').trigger("change");
+            $('[data-bind="rate"]').val('0.03').trigger("change");
+            $('[data-bind="targetedYear"]').val(2000).trigger("change");
+        }
+    </script>
+{% endblock %}

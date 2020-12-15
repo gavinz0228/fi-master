@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block yieldCalculator %}
+<div>
+</div>
+<form>
+  <div class="form-row form-group">
+    <div class="col input-group">
+      <div class="input-group-prepend">
+          <span class="input-group-text">Select a date to add</span>
+        </div>
+      <input type="date" class="form-control" placeholder="Select a date to add to the chart" data-bind="dateToAdd">
+    </div>
+    <div class="col-3">
+      <button class="form-control input-group btn btn-sm btn-primary" type="button" onclick="addDate()">Add To Chart</button>
+    </div>
+  </div>
+</form>
+<br/>
+<div id="date-list"></div>
+<br/>
+<canvas id="yieldCurveChart" width="1600" height="900"></canvas>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+
+<script>
+const today = new Date();
+const lastMonth = new Date(today);
+const newMonth = today.getMonth() - 1;
+if(newMonth < 0){
+    newMonth += 12;
+    lastMonth.setYear(lastMonth.getYear() - 1);
+}
+lastMonth.setMonth(newMonth);
+
+dates = {"dates":["2019-06-01","2019-12-31","2020-06-01", lastMonth.getFullYear()+"-"+ (lastMonth.getMonth() + 1)+"-"+lastMonth.getDate()]}
+
+    function renderChart(){
+      axios.post('/getYieldCurve/', dates)
+                .then(res=>{
+                    console.log(res.data);
+                    yieldData = res.data.yieldData
+                    console.log(yieldData[0])
+                    const ctx = document.getElementById("yieldCurveChart");
+                    const columns = ['1month', '2month', '6month', '1year', '2year', '3year', '5year', '7year', '10year', '20year', '30year']
+                    const datasets = []
+                    for(var i = 0 ;i< yieldData.length; i++){
+                      datasets.push({ "data": columns.map(c => yieldData[i][c]) , "label": yieldData[i].date, "borderColor": '#'+(0x1000000+(Math.random())*0xffffff).toString(16).substr(1,6)})
+                    }
+                    const myChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: columns,
+                        datasets: datasets
+                    }
+                    });
+                    
+                })
+                .catch(err=>{
+                    console.log(err);
+                });
+    }
+    function deleteDate(event){
+      var dateToRemove = $(event).prev().text()
+      var index = dates.dates.indexOf(dateToRemove);
+      if(index > -1)
+        dates.dates.splice(index, 1);
+        renderDateList();
+        renderChart();
+    }
+    function renderDateList(){
+        var dateList = $("#date-list").html("")
+        for(var i =0 ;i< dates.dates.length; i++){
+          dateList.append("<button type='button' class='btn btn-primary'><span>"+dates.dates[i]+"</span><span class='badge badge-light' onclick='deleteDate(this)'>X</span></button> ")
+        }
+    }
+    function addDate(){
+          var newDate = $('[data-bind="dateToAdd"]').val()
+          console.log(newDate);
+          if (dates.dates.includes(newDate)){
+            window.alert(newDate + " is already in the list. Please choose another date.");
+            return;
+          }
+          dates.dates.push(newDate);
+          dates.dates.sort();
+          console.log(dates)
+          renderDateList();
+          renderChart();
+        }
+    
+    function init(){
+        $('[data-bind="dateToAdd"]').val(today.getFullYear()+"-"+ (today.getMonth() + 1)+"-"+today.getDate());
+        renderDateList();
+        renderChart();
+    }
+    </script>
+{% endblock %}

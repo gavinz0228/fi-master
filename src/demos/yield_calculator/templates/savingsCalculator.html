@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block yieldCalculator %}
+<form>
+  <div class="form-row form-group">
+    <div class="col input-group">
+      <div class="input-group-prepend">
+          <span class="input-group-text">Starting Amount</span>
+        </div>
+      <input type="number" class="form-control" placeholder="Start Amount" data-bind="startAmount">
+    </div>
+    <div class="col input-group">
+      <div class="input-group-prepend">
+          <span class="input-group-text">Monthly Contribution</span>
+      </div>
+      <input type="number" class="form-control" placeholder="Monthly Contribution" data-bind="monthlyContribution">
+    </div>
+  </div>
+
+  <div class="form-row form-group">
+    <div class="col input-group">
+      <div class="input-group-prepend">
+          <span class="input-group-text">Yield of Savings</span>
+        </div>
+      <input type="number" class="form-control" placeholder="Yield of Savings" data-bind="yieldOfSavings">
+    </div>
+    <div class="col input-group">
+      <div class="input-group-prepend">
+          <span class="input-group-text">Number of Years</span>
+      </div>
+      <input type="number" class="form-control" placeholder="Number of Years" data-bind="numOfYears">
+    </div>
+  </div>
+
+    <button class="form-control form-group btn btn-sm btn-primary" type="button" onclick="calculate()">Calculate Savings</button>
+</form>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+<canvas id="savingsChart" width="1600" height="900"></canvas>
+<script>
+
+
+
+    function calculate(){
+            axios.post('/calculateSavings/', viewData)
+                .then(res=>{
+                    console.log(res.data);
+                    var ctx = document.getElementById("savingsChart");
+                    var myChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: res.data.years,
+                        datasets: [
+                            { 
+                                data: res.data.compoundedSavings,
+                                label:'Compounded Savings',
+                                borderColor: "#3e95cd",
+                            },
+                            { 
+                                data: res.data.flatSavings,
+                                label:'Flat Savings',
+                                borderColor: "#c45850",
+                            }
+                        ]
+                    }
+                    });
+                })
+                .catch(err=>{
+                    console.log(err);
+                });
+        }
+        function init(){
+            $('[data-bind="startAmount"]').val('200000').trigger("change");
+            $('[data-bind="monthlyContribution"]').val('5000').trigger("change");
+            $('[data-bind="yieldOfSavings"]').val(0.03).trigger("change");
+            $('[data-bind="numOfYears"]').val(20).trigger("change");
+        }
+    </script>
+{% endblock %}

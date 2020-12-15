@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block yieldCalculator %}
+<form id="yield-calc-form">
+  <div class="form-row form-group">
+    <div class="col input-group">
+      <div class="input-group-prepend">
+          <span class="input-group-text">Start Date</span>
+        </div>
+      <input type="date" class="form-control" placeholder="Start Date" data-bind="startDate">
+    </div>
+    <div class="col input-group">
+      <div class="input-group-prepend">
+          <span class="input-group-text">Start Date</span>
+      </div>
+      <input type="date" class="form-control" placeholder="Maturity Date" data-bind="maturityDate">
+    </div>
+  </div>
+  <div class="form-row form-group">
+      <div class="col input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text">Face Value</span>
+        </div>
+        <input type="number" class="form-control" placeholder="Face Value" data-bind="faceValue">
+      </div>
+      <div class="col input-group">
+          <div class="input-group-prepend">
+              <span class="input-group-text">Price</span>
+          </div>
+        <input type="number" class="form-control"  placeholder="Price" data-bind="price">
+      </div>
+    </div>
+    <div class="form-row form-group">
+      <div class="col input-group">
+          <div class="input-group-prepend">
+              <span class="input-group-text">Coupon Rate</span>
+          </div>
+        <input type="number" class="form-control" placeholder="Coupon" data-bind="coupon">
+      </div>
+      <div class="col input-group">
+          <div class="input-group-prepend">
+              <span class="input-group-text">Payment Frequency</span>
+          </div>
+          <select class="custom-select" data-bind="pmtFrequency">
+              <option value="12" selected>Monthly</option>
+              <option value="4">Quarterly</option>
+              <option value="2">Semi-annual</option>
+              <option value="1">Annual</option>
+          </select>
+      </div>
+    </div>
+    <button class="form-control form-group btn btn-sm btn-primary" type="button" onclick="calculate()">Calculate Yield</button>
+</form>
+<b id="calculated-yield"></b>
+<table id="cashflows-table" class="table">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Date</th>
+      <th scope="col">Amount</th>
+      <th scope="col">NPV</th>
+    </tr>
+  </thead>
+  <tbody id="cashflow-tb-body">
+  </tbody>
+</table>
+<script>
+
+function calculate(){
+        axios.post('/calculateBondYield/', viewData)
+            .then(res=>{
+                console.log(res.data);
+                $('#calculated-yield').text("Yield Calculated: " +  res.data.yield);
+                $('#cashflow-tb-body').html(res.data.cashFlows.map((cf, i)=>
+                    "<tr><td>"+(i+1)+"</td><td>"+cf[0]+"</td><td>"+cf[1]+"</td><td>"+cf[2]+"</td></tr>").join('\r\n'));
+                $('#cashflows-table').show("slow");
+            })
+            .catch(err=>{
+                console.log(err);
+            });
+    }
+    function init(){
+        $('[data-bind="startDate"]').val('2020-01-01').trigger("change");
+        $('[data-bind="maturityDate"]').val('2030-01-01').trigger("change");
+        $('[data-bind="faceValue"]').val(10000).trigger("change");
+        $('[data-bind="price"]').val(100).trigger("change");
+        $('[data-bind="coupon"]').val(0.02).trigger("change");
+        $('[data-bind="pmtFrequency"]').trigger("change");
+    }
+</script>
+{% endblock %}

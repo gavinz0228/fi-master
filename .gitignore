@@ -6,3 +6,5 @@ src/.pytest_cache
 src/tests/__pycache__
 dist/
 fimaster.egg-info
+*__pycache__
+.vscode/

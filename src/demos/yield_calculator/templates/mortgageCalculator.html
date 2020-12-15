@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block yieldCalculator %}
+<form id="yield-calc-form">
+  <div class="form-row form-group">
+    <div class="col input-group">
+      <div class="input-group-prepend">
+          <span class="input-group-text">Home Price</span>
+        </div>
+      <input type="number" class="form-control" placeholder="Home Price" onchange="adjustAmountToBorrow()" data-bind="homePrice">
+    </div>
+    <div class="col input-group">
+      <div class="input-group-prepend">
+          <span class="input-group-text">Number of Years</span>
+      </div>
+      <input type="number" class="form-control" placeholder="Number of Years" data-bind="numYears">
+    </div>
+  </div>
+  <div class="form-row form-group">
+    <div class="col input-group">
+      <div class="input-group-prepend">
+          <span class="input-group-text">Percent Down Payment</span>
+      </div>
+      <input type="number" class="form-control" placeholder="Percent Down Payment" onchange="adjustAmountToBorrow()" data-bind="percentDownPayment">
+    </div>
+    <div class="col input-group">
+      <div class="input-group-prepend">
+          <span class="input-group-text">Amount to Borrow</span>
+        </div>
+      <input type="number" class="form-control" disabled placeholder="Amount to Borrow" data-bind="amountToBorrow">
+    </div>
+  </div>
+  <div class="form-row form-group">
+    <div class="col input-group">
+      <div class="input-group-prepend">
+          <span class="input-group-text">Interest Rate</span>
+      </div>
+      <input type="number" class="form-control" placeholder="Interest Rate" data-bind="rate">
+    </div>
+    <div class="col input-group">
+      <div class="input-group-prepend">
+          <span class="input-group-text">Other Monthly Paid Amount</span>
+      </div>
+      <input type="number" class="form-control" placeholder="Other Monthly Paid Amount" data-bind="otherPayment">
+    </div>
+  </div>
+  <button class="form-control form-group btn btn-sm btn-primary" type="button" onclick="calculate()">Calculate Monthly Mortgage Payment</button>
+  
+</form>
+<p id="mortgage-result"></p>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+<script>
+    function adjustAmountToBorrow(){
+      var newAmount = (100 - $('[data-bind="percentDownPayment"]').val()) / 100 * $('[data-bind="homePrice"]').val() ;
+      $('[data-bind="amountToBorrow"]').val(newAmount).trigger('change');
+    }
+
+    function calculate(){
+            axios.post('/calculateMortgage/', viewData)
+                .then(res=>{
+                    console.log(res.data);
+                    var result_message =  "The calculated monthly payment is <b>" + res.data.monthly_payment + "</b>. <br/>";
+                    result_message += "Plus the monthly other payment of <b>" + viewData.otherPayment + "</b>. <br>";
+                    result_message += "To summarize, total monthly payment is <b>" + (parseFloat(res.data.monthly_payment) + parseFloat(viewData.otherPayment)) + "</b>. <br>";
+                    $('#mortgage-result').html(result_message);
+ 
+                })
+                .catch(err=>{
+                    console.log(err);
+                });
+        }
+        function init(){
+            $('[data-bind="homePrice"]').val('1000000').trigger("change");
+            $('[data-bind="numYears"]').val(30).trigger("change");
+            $('[data-bind="rate"]').val('0.03').trigger("change");
+            $('[data-bind="percentDownPayment"]').val('22').trigger("change");
+            $('[data-bind="otherPayment"]').val('300').trigger("change");
+        }
+    </script>
+{% endblock %}
