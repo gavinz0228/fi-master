@@ -3,3 +3,5 @@ services:
   web:
     image: financialtools
     restart: always
+    ports:
+      - "80:80"
